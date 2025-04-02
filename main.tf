@@ -76,6 +76,9 @@ resource "azapi_resource" "aks" {
             "CriticalAddonsOnly=true:PreferNoSchedule"
           ]
           orchestratorVersion = var.kubernetes_version
+          securityProfile = {
+            sshAccess = "Disabled"
+          }
         }
       ]
       autoScalerProfile = {
