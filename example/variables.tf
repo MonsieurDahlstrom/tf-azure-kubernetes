@@ -11,7 +11,9 @@ variable "client_id" {
 }
 
 variable "client_secret" {
-  type = string
+  type        = string
+  default     = null
+  description = "Client secret for service principal authentication. Only required when use_oidc is false or null."
 }
 
 variable "use_oidc" {
