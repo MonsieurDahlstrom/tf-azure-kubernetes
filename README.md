@@ -21,6 +21,7 @@ This Terraform module deploys a production-ready Azure Kubernetes Service (AKS) 
     - [Learn more about Advanced Container Networking Services](https://learn.microsoft.com/en-us/azure/aks/advanced-container-networking-services-overview)
   - Your subscription must be enabled for AKS VNet integration (apiServerVnetIntegration feature)
     - [Register the EnableAPIServerVnetIntegrationPreview feature flag](https://learn.microsoft.com/en-us/azure/aks/api-server-vnet-integration#register-the-enableapiserververnetintegrationpreview-feature-flag)
+  - Access to Azure API version 2024-10-02-preview for AKS
 - Virtual Network with subnets for nodes and API server
 - Terraform 1.6 or later
 - Azure CLI (for local development)
@@ -45,6 +46,7 @@ module "aks" {
   default_node_pool = {
     name       = "system"
     node_count = 3
+    vm_size    = "Standard_D2_v5"
   }
 
   tags = {
@@ -69,9 +71,13 @@ module "aks" {
   nodes_subnet_id      = "/subscriptions/.../subnets/aks-nodes"
   api_server_subnet_id = "/subscriptions/.../subnets/aks-api"
   
+  network_plugin = "cilium"
+  network_policy = "cilium"
+  
   default_node_pool = {
     name       = "system"
     node_count = 5
+    vm_size    = "Standard_D4_v5"
   }
   
   tags = {
@@ -84,18 +90,28 @@ module "aks" {
 
 ## Inputs
 
-| Name | Description | Type | Required |
-|------|-------------|------|----------|
-| resource_group_name | Name of the Azure resource group | string | yes |
-| location | Azure region to deploy the cluster | string | yes |
-| cluster_name | Name of the AKS cluster | string | yes |
-| kubernetes_version | Kubernetes version to use | string | yes |
-| dns_prefix | DNS prefix for the cluster | string | yes |
-| vnet_id | ID of the VNet for AKS integration | string | yes |
-| nodes_subnet_id | ID of the subnet for AKS nodes | string | yes |
-| api_server_subnet_id | ID of the subnet for AKS API server | string | yes |
-| default_node_pool | Configuration for the default node pool | object | yes |
-| tags | Additional tags to apply to all resources | map(string) | no |
+| Name | Description | Type | Required | Default |
+|------|-------------|------|----------|---------|
+| resource_group_name | Name of the Azure resource group | string | yes | - |
+| location | Azure region to deploy the cluster | string | yes | - |
+| cluster_name | Name of the AKS cluster | string | yes | - |
+| kubernetes_version | Kubernetes version to use | string | no | "1.31" |
+| dns_prefix | DNS prefix for the cluster | string | yes | - |
+| vnet_id | ID of the VNet for AKS integration | string | yes | - |
+| nodes_subnet_id | ID of the subnet for AKS nodes | string | yes | - |
+| api_server_subnet_id | ID of the subnet for AKS API server | string | yes | - |
+| network_plugin | Network plugin to use for the cluster | string | no | "cilium" |
+| network_policy | Network policy to use for the cluster | string | no | "cilium" |
+| default_node_pool | Configuration for the default node pool | object | no | See below |
+| tags | Additional tags to apply to all resources | map(string) | no | {} |
+
+### Default Node Pool Object
+
+| Name | Description | Type | Required | Default |
+|------|-------------|------|----------|---------|
+| name | Name of the node pool | string | yes | "default" |
+| node_count | Number of nodes in the pool | number | yes | 1 |
+| vm_size | Size of the VMs in the node pool | string | no | "Standard_D2_v2" |
 
 ## Outputs
 
@@ -103,7 +119,7 @@ module "aks" {
 |------|-------------|
 | cluster_id | ID of the AKS cluster |
 | cluster_name | Name of the AKS cluster |
-| kube_config | Kubernetes configuration for the cluster |
+| kube_config | Kubernetes configuration for the cluster (sensitive) |
 | cluster_endpoint | The Kubernetes cluster server endpoint |
 | cluster_identity | The identity used by the AKS cluster |
 
