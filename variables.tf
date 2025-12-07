@@ -36,7 +36,7 @@ variable "api_server_subnet_id" {
 variable "kubernetes_version" {
   description = "The version of Kubernetes to use for the AKS cluster"
   type        = string
-  default     = "1.31"
+  default     = "1.34"
 }
 
 variable "tags" {

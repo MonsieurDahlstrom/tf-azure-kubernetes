@@ -21,10 +21,11 @@ This Terraform module deploys a production-ready Azure Kubernetes Service (AKS) 
     - [Learn more about Advanced Container Networking Services](https://learn.microsoft.com/en-us/azure/aks/advanced-container-networking-services-overview)
   - Your subscription must be enabled for AKS VNet integration (apiServerVnetIntegration feature)
     - [Register the EnableAPIServerVnetIntegrationPreview feature flag](https://learn.microsoft.com/en-us/azure/aks/api-server-vnet-integration#register-the-enableapiserververnetintegrationpreview-feature-flag)
-  - Access to Azure API version 2024-10-02-preview for AKS
+  - Access to Azure API version 2025-07-01 for AKS
 - Virtual Network with subnets for nodes and API server
 - Terraform 1.6 or later
 - Azure CLI (for local development)
+- AZAPI provider version 2.8.0 is the minimum provider. 
 
 ## Usage
 
