@@ -27,7 +27,7 @@ resource "azurerm_role_assignment" "aks_identity_operator" {
 }
 
 resource "azapi_resource" "aks" {
-  type      = "Microsoft.ContainerService/managedClusters@2024-10-02-preview"
+  type      = "Microsoft.ContainerService/managedClusters@2025-07-01"
   name      = var.cluster_name
   parent_id = data.azurerm_resource_group.aks.id
   location  = var.location
@@ -77,7 +77,8 @@ resource "azapi_resource" "aks" {
           ]
           orchestratorVersion = var.kubernetes_version
           securityProfile = {
-            sshAccess = "Disabled"
+            enableSecureBoot = true
+            enableVTPM = true
           }
         }
       ]
@@ -143,7 +144,7 @@ resource "azapi_resource" "aks" {
 }
 
 resource "azapi_resource_action" "aks_kubeconfig" {
-  type                   = "Microsoft.ContainerService/managedClusters@2024-10-02-preview"
+  type                   = "Microsoft.ContainerService/managedClusters@2025-07-01"
   resource_id            = azapi_resource.aks.id
   action                 = "listClusterAdminCredential"
   response_export_values = ["*"]
