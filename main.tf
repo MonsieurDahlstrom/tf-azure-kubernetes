@@ -77,9 +77,9 @@ resource "azapi_resource" "aks" {
           ]
           orchestratorVersion = var.kubernetes_version,
           securityProfile = {
-            sshAccess: "Disabled",
-            enableSecureBoot: true,
-            enableVTPM: true
+            sshAccess = "Disabled"
+            enableSecureBoot = true
+            enableVTPM = true
           }
         }
       ]
