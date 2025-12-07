@@ -75,7 +75,7 @@ resource "azapi_resource" "aks" {
           nodeTaints = [
             "CriticalAddonsOnly=true:PreferNoSchedule"
           ]
-          orchestratorVersion = var.kubernetes_version,
+          orchestratorVersion = var.kubernetes_version
           securityProfile = {
             sshAccess = "Disabled"
             enableSecureBoot = true
