@@ -10,6 +10,9 @@ on:
       AZURE_TENANT_ID:
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   test-ubuntu:
     name: Integration Tests (Ubuntu)
